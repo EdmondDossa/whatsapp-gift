@@ -336,37 +336,6 @@
       animation: pulse 2s infinite;
     }
 
-    .special-number {
-      background: linear-gradient(45deg, #ff6b6b, #ffd700, #4ecdc4, #ff9ff3);
-      background-size: 400% 400%;
-      animation: rainbowGlow 2s ease infinite;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    @keyframes rainbowGlow {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    .special-title {
-      background: linear-gradient(45deg, #ff6b6b, #ffd700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: pulse 1.5s infinite;
-    }
-
     .remaining-count {
       color: white;
       font-size: 1em;
@@ -468,20 +437,10 @@
   </div>
 
   <script>
-    const API_URL = "game.php"; // Remplacez par l'URL de votre API
+    const API_URL = "game.php";
     let gameData = null;
     let userNumber = null;
-    let specialNumbers = [1, 2, 3, 4];
-
-    // Vérifier les paramètres URL pour numéro spécial
-    function getSpecialNumber() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const special = urlParams.get("special");
-      if (special && specialNumbers.includes(parseInt(special))) {
-        return parseInt(special);
-      }
-      return null;
-    }
+    // SUPPRIMÉ: La notion de numéros spéciaux a été enlevée.
 
     // Générer un ID unique pour ce navigateur/appareil
     function getDeviceId() {
@@ -518,7 +477,6 @@
     // Mettre à jour l'interface utilisateur
     function updateUI() {
       const deviceId = getDeviceId();
-      const specialNumber = getSpecialNumber();
       const instruction = document.getElementById("instruction");
       const remainingCount = document.getElementById("remainingCount");
       const count = document.getElementById("count");
@@ -533,26 +491,9 @@
               Chaque personne ne peut tirer qu'une seule fois !
             </div>
           `;
-      } else if (specialNumber) {
-        // Lien spécial
-        if (gameData.availableNumbers.includes(specialNumber)) {
-          const title = document.querySelector(".title");
-          title.innerHTML = "🌟 Numéro Mystère Spécial 🌟";
-          title.classList.add("special-title");
-          instruction.innerHTML = "✨ Votre numéro spécial vous attend ! ✨";
-        } else {
-          instruction.innerHTML = `
-              <div class="all-taken">
-                😔 Le numéro spécial ${specialNumber} a déjà été attribué !
-              </div>
-            `;
-        }
       } else {
-        // Numéros normaux (sans les spéciaux)
-        const availableNormal = gameData.availableNumbers.filter(
-          (n) => !specialNumbers.includes(n)
-        );
-        if (availableNormal.length > 0) {
+        // MODIFIÉ: Logique simplifiée sans numéros spéciaux
+        if (gameData.availableNumbers.length > 0) {
           instruction.innerHTML =
             "✨ Cliquez sur la boîte pour découvrir votre numéro ! ✨";
         } else {
@@ -591,7 +532,6 @@
     // Ouvrir le numéro mystère
     async function openGift() {
       const deviceId = getDeviceId();
-      const specialNumber = getSpecialNumber();
 
       if (gameData.deviceAssignments[deviceId]) {
         showAlreadyUsedMessage();
@@ -604,9 +544,9 @@
           headers: {
             "Content-Type": "application/json",
           },
+          // MODIFIÉ: Le corps de la requête est simplifié
           body: JSON.stringify({
-            deviceId: deviceId,
-            specialNumber: specialNumber,
+            deviceId: deviceId
           }),
         });
 
@@ -654,18 +594,11 @@
     function animateNumber(number) {
       const numberAnimation = document.getElementById("numberAnimation");
       numberAnimation.textContent = number;
-
-      if (specialNumbers.includes(number)) {
-        numberAnimation.classList.add("special-number");
-        setTimeout(() => createConfetti(), 500);
-        setTimeout(() => createConfetti(), 1000);
-      }
-
+      // SUPPRIMÉ: La classe spéciale n'est plus nécessaire
       numberAnimation.classList.add("show");
 
       setTimeout(() => {
         numberAnimation.classList.remove("show");
-        numberAnimation.classList.remove("special-number");
       }, 3000);
     }
 
@@ -716,13 +649,8 @@
       const message = result.querySelector(".message");
 
       numberDisplay.textContent = number;
-
-      if (specialNumbers.includes(number)) {
-        numberDisplay.classList.add("special-number");
-        message.textContent = "🎉 Numéro spécial attribué ! 🎉";
-      } else {
-        message.textContent = "Votre numéro a été attribué !";
-      }
+      // MODIFIÉ: Message unifié
+      message.textContent = "Votre numéro a été attribué !";
 
       result.classList.add("show");
       instruction.style.opacity = "0";
