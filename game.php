@@ -13,7 +13,7 @@ function readGameData()
     global $dataFile;
     if (!file_exists($dataFile)) {
         $initialData = [
-            'availableNumbers' => range(4, 12), // MODIFIÉ: Plage de 4 à 12
+            'availableNumbers' => range(5, 12), // MODIFIÉ: Plage de 5 à 12
             'usedNumbers' => [],
             'deviceAssignments' => []
         ];
