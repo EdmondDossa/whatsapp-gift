@@ -508,8 +508,8 @@
       }
 
       // Mettre à jour le compteur
-      // MODIFIÉ: Ajout de 3 pour simuler les numéros 1, 2, 3
-      count.textContent = gameData.availableNumbers.length + 3;
+      // MODIFIÉ: Ajout de 4 pour simuler les numéros 1, 2, 3, 4
+      count.textContent = gameData.availableNumbers.length + 4;
       remainingCount.style.display = "block";
 
       createSparkles();
